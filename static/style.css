@@ -4,3 +4,10 @@ body{
 .nav_flex{
   display: flex;
 }
+#iframe{
+  width: 90vw;
+  height: 90vh;
+}
+.selected{
+  border: solid 2px red;
+}
