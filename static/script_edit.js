@@ -1,16 +1,17 @@
+// checking if js is connected
 console.log("connected");
 
-function buttonHandler(){
-  var iframe = document.querySelector('iframe');
-  console.log(iframe);
-  var cache = iframe.contentDocument.querySelectorAll('p');
-  console.log(cache);
-  cache[1].addEventListener('click', console.log("clicked"));
-}
-
+//add clickListener to Button to enter edit mode
 var edit_button = document.querySelector('#trigger_edit');
 edit_button.addEventListener('click', buttonHandler);
 
+function buttonHandler(){
+  var iframe = document.querySelector('iframe');
+  var c = iframe.contentDocument.querySelectorAll('p');
+  for (let i = 0; i< c.length; i++){
+    c[i].addEventListener('click', function(){this.className += 'selected'});
+  }
+}
 /*
 var editing_mode = false;
 var editable_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'p'];
