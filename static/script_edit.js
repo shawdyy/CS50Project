@@ -1,47 +1,43 @@
 // checking if js is connected
-console.log("connected");
-
-//add clickListener to Button to enter edit mode
-var edit_button = document.querySelector('#trigger_edit');
-edit_button.addEventListener('click', buttonHandler);
-
-function buttonHandler(){
+window.addEventListener('load', function(){
+  var editable_tags = ['p', 'a', 'h1', 'h2', 'h3', 'h4']
   var iframe = document.querySelector('iframe');
-  var c = iframe.contentDocument.querySelectorAll('p');
-  for (let i = 0; i< c.length; i++){
-    c[i].addEventListener('click', function(){this.className += 'selected'});
-  }
-}
-/*
-var editing_mode = false;
-var editable_tags = ['h1', 'h2', 'h3', 'h4', 'h5', 'p'];
+  var tagNodeList = []
 
-function buttonHandler(event){
-  if (editing_mode){
-    editing_mode = false;
-    console.log(event);
-  }
-  else{
-    var iframe = document.querySelector('iframe');
-    for(let i = 0; i < editable_tags.length; i++){
-      let cache = iframe.contentDocument.querySelectorAll(editable_tags[i]);
-      cache.addEventListener('click', clickHandler);
+  //add clickListener to Button to enter edit mode
+  var edit_button = document.querySelector('#trigger_edit');
+  edit_button.addEventListener('click', buttonHandler);
+
+  function buttonHandler(){
+    for (let j = 0; j < editable_tags.length; j++){
+      tagNodeList.push(iframe.contentDocument.querySelectorAll(editable_tags[j]));
+      for (let i = 0; i< tagNodeList[j].length; i++){
+        tagNodeList[j][i].addEventListener('click', function(){
+          if (!this.classList.contains('selected')){
+            this.classList.add('selected');
+          } else {
+            this.classList.remove('selected');
+          }
+        });
+      }
     }
-    editing_mode = true;
   }
-  console.log('lol click');
-}
 
-var edit_button = document.querySelector('#trigger_edit');
-edit_button.addEventListener('click', buttonHandler);
+  var popup_button = document.querySelector('#trigger_popup');
+  var pu = document.querySelector('.modal');
+  popup_button.addEventListener('click', function(){
+    pu.style.display = "block";
+  })
 
+  var close_button = document.querySelector('.close');
+  close_button.addEventListener('click', function(){
+    pu.style.display = "none";
+  })
 
-function clickHandler(event){
-  if (event.classList.contains('selected')){
-    event.classList.remove('selected');
+  var links = iframe.contentDocument.querySelectorAll('a');
+  for (let i = 0; i < links.length; i++){
+    links[i].addEventListener('click', function(event){
+      event.preventDefault();
+    })
   }
-  else{
-    event.classList.add('selected');
-  }
-  console.log(event.srcElement);
-}*/
+}, false)
