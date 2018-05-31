@@ -4,6 +4,11 @@ body{
 .nav_flex{
   display: flex;
 }
+.iframe_wrapper{
+  margin: auto;
+  text-align: center;
+}
+
 #iframe{
   width: 90vw;
   height: 90vh;
@@ -21,13 +26,87 @@ body{
   overflow: auto;
 }
 .popup_content{
-  background-color: white;
+  background-color: #E1E1E1;
   border: 1px solid black;
   margin: 10% auto;
-  width: 70%;
-  height: 50%;
+  width: 60%;
+  height: 60%;
+  padding: 20px;
+}
+.popup_headings{
+  margin: 5px 0;
+}
+.popup_grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  grid-gap: 3px;
+  width: 95%;
+  height: 95%;
+}
+.textarea_edit_container{
+  grid-column: 1/4;
+  grid-row: 1/5;
+}
+.textarea_edit{
+  background-color: transparent;
+  padding: 10px;
+  font-size: 1.1em;
+  font-family: sans-serif;
+  resize: none;
+  border-radius: 2px;
+  width: 90%;
+  height: 80%;
+  overflow: scroll;
+  box-shadow: inset 5px 5px 5px -3px #D1D1D1;
+  overflow-x: hidden;
+}
+.textarea_comment_container{
+  grid-column: 1/4;
+  grid-row: 5/7;
+}
+.textarea_comment{
+  background-color: transparent;
+  box-shadow: inset 5px 5px 5px -3px #D1D1D1;
+  padding: 10px;
+  font-size: 1.2em;
+  font-family: sans-serif;
+  width: 90%;
+  height: 80%;
+  resize: none;
+  overflow-x: hidden;
+}
+.content_history_container{
+  grid-column: 4/5;
+  grid-row: 1/6;
+  border: 1px solid #ddd;
+  border-radius: 2px;
+}
+.content_history_ul{
+  overflow: scroll;
+  overflow-x: hidden;
+  width: 90%;
+  height: 85%;
+}
+.save_changes_container{
+  grid-column: 4/5;
+  grid-row: 6/7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#save_changes{
+  text-decoration: none;
+  padding: 5px;
+  border:1px solid #333;
+  background-color: #777;
+  color: white;
+  border-radius: 2px;
+
 }
 .close {
+    grid-column: 2/3;
+    grid-row: 1/2;
     color: #aaa;
     float: right;
     font-size: 28px;
