@@ -2,7 +2,7 @@
 window.addEventListener('load', function(){
   var editable_tags = ['p', 'a', 'h1', 'h2', 'h3', 'h4']
   var iframe = document.querySelector('iframe');
-  var tagNodeList = []
+  var tagNodeList = [];
 
   //add clickListener to Button to enter edit mode
   var edit_button = document.querySelector('#trigger_edit');
@@ -27,7 +27,7 @@ window.addEventListener('load', function(){
     if (this.childElementCount > 0){
       var check = true;
       for (let i = 0; i < this.childElementCount; i++){
-        if (this.children[i].tagName !== "BR"){
+        if (this.children[i].tagName !== "BR" || this.children[i].tagName !== "SPAN"){
           check = false;
         }
       }

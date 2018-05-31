@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from urllib.parse import urlsplit
 from bs4 import BeautifulSoup
 import os
 import requests
@@ -11,17 +12,20 @@ def edit():
     if request.method == 'GET':
         return render_template('edit_get.html')
     else:
-        return render_template('edit_post.html')
+        url = request.form.get('url')
+        print(url)
+        return render_template('edit_post.html', url=url)
 
-@app.route("/proxy", methods=['GET'])
-def proxy():
-    url = 'https://www.3mdeutschland.de/3M/de_DE/unternehmen-de/'
+@app.route("/proxy/<path:url>", methods=['GET'])
+def proxy(url):
+    print(request.args.get('url'))
     r = requests.get(url)
     c = r.content
     soup = BeautifulSoup(c, "html.parser")
 
     newtag_base = soup.new_tag('base')
-    newtag_base.attrs['href'] = "https://www.3mdeutschland.de"
+    base_url = "{0.scheme}://{0.netloc}/".format(urlsplit(url))
+    newtag_base.attrs['href'] = base_url
     soup.head.insert(0, newtag_base)
 
     newtag_link = soup.new_tag('link')
