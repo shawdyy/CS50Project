@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
   <div class="nav_flex">
-      <h1>Placeholder Headline</h1>
-      <button type='button' id='trigger_edit'>Edit</button>
+      <h1><a href="/">Placeholder Headline</a></h1>
+      <div>
+        <input type="radio" id="noEditButton" name="editRadio" checked/>
+        <label for="noEditButton">Not Editable</label>
+      </div>
+      <div>
+          <input type="radio" id="editButton" name="editRadio"/>
+          <label for="editButton">Editable</label>
+      </div>
+      <!--<button type='button' id='trigger_edit'>Edit</button>-->
   </div>
     <div class="modal">
     <div class="popup_content">
