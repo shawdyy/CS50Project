@@ -7,6 +7,7 @@ window.addEventListener('load', function(){
   //add clickListener to modal
   var pu = document.querySelector('.modal');
   var editable_content = document.querySelector('.textarea_edit');
+  var content_comment = document.querySelector('.textarea_comment');
 
   //add clickListener to save and close
   var save_button = document.querySelector('#save_changes');
@@ -95,6 +96,14 @@ window.addEventListener('load', function(){
     save_button.addEventListener('click', function(event){
       event.preventDefault();
       active_element.innerHTML = editable_content.value;
+      let json = {
+        user: 1,
+        project: "test",
+        selector: getUniqueSelector(active_element),
+        value: editable_content.value,
+        comment: content_comment.value
+      }
+      console.log(json);
       pu.style.display = 'none';
       editable_content.innerHTML = "";
     });
@@ -111,3 +120,59 @@ window.addEventListener('load', function(){
     })
   }
 }, false)
+
+function getElementSelector(element){
+  let selector;
+  selector = element.tagName;
+  if(element.id){
+    selector += "#" + element.id;
+  }
+  if(element.className){
+    selector += "." + element.className.replace(/\s/g, ".")
+  }
+  return selector;
+}
+
+function getElementSiblings(element){
+  let nth = 0;
+  let siblings = 0;
+  let parentNode = element.parentNode;
+  for (let i=0; i < parentNode.childElementCount; i++){
+    if (parentNode.children[i].tagName === element.tagName){
+      siblings++;
+      if (parentNode.children[i] === element){
+        nth = i+1;
+      }
+    }
+  }
+  if (siblings > 1){
+    return nth;
+  }
+  else {
+    return -1;
+  }
+}
+
+function getUniqueSelector(element){
+  let cacheArr = [];
+  cacheArr.push(getElementSelector(element));
+  let activeElement = element;
+  while (activeElement.parentNode.tagName !== "BODY"){
+    activeElement = activeElement.parentNode;
+    let nth = getElementSiblings(activeElement)
+    if (nth > 0){
+      cacheArr.push(activeElement.tagName + ":nth-child(" + nth + ")");
+    }
+    else{
+      cacheArr.push(activeElement.tagName);
+    }
+  }
+  let uniqueSelector = "";
+  for (let i = cacheArr.length -1; i >= 0; i--){
+    uniqueSelector += cacheArr[i];
+    if (i !== 0){
+      uniqueSelector += " > ";
+    }
+  }
+  return uniqueSelector;
+}
