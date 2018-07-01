@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="hero_banner">
+    <h2 class="hero_heading">No more feedback loops!</h2>
+    <p>Change the content of your site and export them so your developer can easy implement the changes</p>
+    <a href="{{url_for('edit')}}"><span>Start now</span></a>
+  </div>
+  <div class="section_hr">
+    <hr>
+  </div>
+  <div class="fifty-container">
+    <h2>Don't let details ruin your website</h2>
+    <div class="fifty-left">
+      <img src="/static/assets/workingonwebsite.jpg" alt="two women working on a website">
+      <!-- Photo by Kobu Agency on Unsplash -->
+    </div>
+    <div class="fifty-right">
+      <p>Content is King. You want your high quality content displayed on your website as good as possible, but your developer can't follow your instructions which creates more and more feedback loops.
+      With wype.io you can edit your page content in a WYSIWYG Editor. When you are finished you can export the changes and send them to your developer and he will get instructions he can understand. No more feedback loops!</p>
+    </div>
+  </div>
+{% endblock %}

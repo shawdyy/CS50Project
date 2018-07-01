@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, g
+from flask import Flask, flash, session, render_template, request, g, redirect, url_for
+from flask_login import LoginManager, login_required
 import sqlite3
 from urllib.parse import urlsplit, unquote
 from bs4 import BeautifulSoup
@@ -6,40 +7,96 @@ import os
 import requests
 
 DATABASE = 'database.db'
-os.environ["FLASK_APP"] = "app.py"
 app = Flask(__name__)
+app.config["FLASK_APP"] = "app.py"
+login_manager = LoginManager()
+login_manager.init_app(app)
+app.secret_key = os.environ['FLASK_SECRET_KEY']
 
-def get_db():
-    db = getattr(g, '_database', None)
-    if db is None:
-        db = g._database = sqlite3.connect(DATABASE)
-    return db
+###
+# Der Spaß läuft hier noch nicht. session[key] ist anscheinend kein geeigneter check, ob jemand eingeloggt ist.
+# Wir müssen einen richtigen check für eingeloggte user an die routes setzen um richtige redirects zu setzen
 
-def init_db():
-    with app.app_context():
-        db = get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        login_details = {
+            'email': request.form['email'],
+            'password': request.form['password']
+        }
+        with sqlite3.connect(DATABASE) as con:
+            con.row_factory = sqlite3.Row
+            db = con.cursor()
+            db.execute('SELECT user_id, password, firstname FROM user WHERE email=?', [(login_details['email'])])
+            db_row = db.fetchone()
+            if not db_row:
+                return render_template('check.html', message="An Account with this Email doesn't exists.")
+            else:
+                if not login_details['password']==db_row['password']:
+                    return render_template('check.html', message="Please check the provided passwords.")
+                else:
+                    session['username'] = request.form['email']
+                    return render_template('check.html', message="Welcome back " + db_row['firstname'])
+    else:
+        if session['username']:
+            return render_template('check.html', message="Yo are already logged in!")
+        else:
+            return render_template('login.html')
 
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        register_details = {
+            'firstname': request.form['first_name'],
+            'lastname': request.form['last_name'],
+            'email': request.form['email'],
+            'password1': request.form['password'],
+            'password2': request.form['password2']
+        }
+
+        with sqlite3.connect(DATABASE) as con:
+            con.row_factory = sqlite3.Row
+            db = con.cursor()
+            db.execute('SELECT user_id FROM user WHERE email=?', [(register_details['email'])])
+            db_row = db.fetchone()
+            if db_row:
+                return render_template('check.html', message="An Account with this Email already exists.")
+            else:
+                if not register_details['password1']==register_details['password2']:
+                    return render_template('check.html', message="Please check the provided passwords.")
+                else:
+                    db.execute('INSERT INTO user (email, firstname, lastname, password) VALUES (?, ?, ?, ?)', (register_details['email'], register_details['firstname'], register_details['lastname'], register_details['password1']))
+                    con.commit()
+                    return render_template('check.html', message="Welcome "+ register_details['firstname'] + "! Login to use wype.io.")
+    else:
+        return render_template('register.html')
 
 @app.route("/", methods=['GET'])
+def home():
+    return render_template('home.html')
+
+@app.route("/createproject", methods=['GET'])
+@login_required
 def edit():
     if request.method == 'GET':
-        return render_template('edit_get.html')
+        if session['username']:
+            return render_template('create_project.html')
+        else:
+            return redirect(url_for('login'))
 
 @app.route("/search", methods=['GET'])
 def searchURL():
     if request.method == 'GET':
         url = unquote(request.args.get('url'))
         print(url)
-        return render_template('edit_post.html', url=url)
+        return render_template('edit_project.html', url=url)
 
 @app.route("/savechanges", methods=['POST'])
 def saveChanges():
@@ -73,3 +130,7 @@ def proxy(url):
         return soup.renderContents()
     except:
         return "Please provide a valid url"
+
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect(url_for('login'))

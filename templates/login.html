@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="login_wrapper">
+  <div class="login_container">
+    <h2>Please login:</h2>
+    <form class="login" action="/login" method="post">
+      <ul class="login_ul">
+        <li>
+          <label for="email">Email</label>
+          <input class="email" type="email" name="email" required>
+        </li>
+        <li>
+          <label for="password">Password</label>
+          <input class="password" type="password" name="password" required>
+        </li>
+      </ul>
+        <button class="submit_l" type="submit" name="submit_l">Login</button>
+    </form>
+    <p> First time here? <a href="/register">Create a new Account</a>
+  </div>
+</div>
+{% endblock %}

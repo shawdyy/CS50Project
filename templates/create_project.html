@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="login_wrapper">
+    <div class="login_container">
+      <h2>Create a new Project:</h2>
+      <form class="login" action="/search">
+        <ul class="login_ul">
+          <li>
+            <label for="project_name">Project Name</label>
+            <input class="project_name" type="text" name="project_name" required>
+          </li>
+          <li>
+            <label for="url">URL</label>
+            <input class="url" type="url" name="url" required>
+          </li>
+          <li>
+            <input id="disclaimer_cb" type="checkbox" name="disclaimer" required>
+            <p id="disclaimer">I confirm, that the provided URL redirects to my own website or a website owned by my company. If this isn't the case please contact the owner of the website and ask for permission to use wype.io on this URL.</p>
+          </li>
+        </ul>
+          <button class="submit_l" type="submit" name="submit_l">Create Project</button>
+      </form>
+    </div>
+  </div>
+  <script src="{{url_for('static', filename='script_search.js')}}" type="text/javascript"></script>
+{% endblock %}
