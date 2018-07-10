@@ -1,8 +1,15 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="login_wrapper">
+<div class="content_wrapper">
   <div class="login_container">
-    <h2>Resgister a new account:</h2>
+    <div class="error_red">
+      {% if e == "2" %}
+      <p class="error_message">An Account with this Email already exists.</p>
+      {% elif e == "3" %}
+      <p class="error_message">Please check the provided passwords.</p>
+      {% endif %}
+    </div>
+    <h2>Register a new account:</h2>
     <form class="login" action="/register" method="post">
       <ul class="login_ul">
         <li>

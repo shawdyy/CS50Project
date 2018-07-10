@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-  <div class="login_wrapper">
+  <div class="content_wrapper">
     <div class="login_container">
       <h2>Create a new Project:</h2>
-      <form class="login" action="/search">
+      <form class="login" action="{{url_for('newProject')}}" method="post">
         <ul class="login_ul">
           <li>
             <label for="project_name">Project Name</label>

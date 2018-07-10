@@ -1,0 +1,26 @@
+CREATE TABLE user (
+  user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT UNIQUE NOT NULL,
+  firstname TEXT NOT NULL,
+  lastname TEXT NOT NULL,
+  password TEXT NOT NULL
+);
+
+CREATE TABLE projects (
+  project_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  URL TEXT NOT NULL,
+  last_changed TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES user (user_id)
+);
+
+CREATE TABLE changes (
+  change_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER NOT NULL,
+  selector TEXT NOT NULL,
+  change_value TEXT NOT NULL,
+  comment TEXT NOT NULL,
+  created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (project_id) REFERENCES projects (project_id)
+);

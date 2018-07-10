@@ -1,4 +1,5 @@
 {% extends "base.html" %}
 {% block content %}
-{{message}}
+{{message}}<br>
+<a href="{{url_for('home')}}"><span>{{cta}}</span></a>
 {% endblock %}

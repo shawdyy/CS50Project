@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content_wrapper dashboard">
+  <div class="dashboard_container">
+      <div class="myprojects_heading">
+        <h2>My Projects</h2>
+      </div>
+      <div class="project_container">
+        <div class="p_element_container">
+          <a class="p_element_link" href="{{url_for('newProject')}}">
+            <div class="p_new_element">
+              <span>+</span>
+            </div>
+            <div class="p_new_description">
+              <span>New Project</span><br>
+            </div>
+          </a>
+        </div>
+        {% for item in projects %}
+          <!--<li><a href="{{ item.href }}">{{ item.caption }}</a></li>-->
+          <div class="p_element_container">
+            <a class="p_element_link" href="{{url_for('editProject', id=item['project_id'])}}">
+              <div class="p_element">
+                <img class="p_thumbnail"src="{{url_for('static', filename=item['path'])}}" alt="{{projectname}}" onerror="console.log(this.src); this.src ='/static/assets/thumbnails/my_screenshot.png'">
+                <!-- <img src="/static/assets/thumbnails/my" alt="{{projectname}}">-->
+              </div>
+              <div class="p_description">
+                <span>Name: {{item['name']}}</span><br>
+                <span>Created: Placeholder</span><br>
+                <span>Last edit: {{item['last_changed']}}</span><br>
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+  </div>
+</div>
+<script src="{{url_for('static', filename='script_dashboard.js')}}" type="text/javascript"></script>
+{% endblock %}

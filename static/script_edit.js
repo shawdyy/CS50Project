@@ -80,6 +80,7 @@ window.addEventListener('load', function(){
           tagNodeList[index][i].addEventListener('click', prepareEditTextContent);
       }
     }
+    document.querySelector('#nav_heading').style.display = "none";
     console.log(tagNodeList);
   }
 
@@ -89,6 +90,7 @@ window.addEventListener('load', function(){
         tagNodeList[i][j].removeEventListener('click', prepareEditTextContent);
       }
     }
+    document.querySelector('#nav_heading').style.display = "block";
   }
 
   //add eventListener for save buttonHandler

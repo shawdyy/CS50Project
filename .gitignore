@@ -1,0 +1,14 @@
+#pycache
+__pycache__/
+
+#Screenshots
+/static/assets/thumbnails/*
+
+#Templates
+/templates/check.html
+
+#Database & co
+database.db
+db_management.py
+environ.bat
+TO-DOs.txt

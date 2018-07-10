@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="login_wrapper">
+<div class="content_wrapper">
   <div class="login_container">
+    <div class="info_message">
+      {% if e == "0" %}
+      <p class="error_message">Wrong Email!</p>
+      {% elif e == "1" %}
+      <p class="error_message">Wrong Password!</p>
+      {% elif e == "r_success" %}
+      <p class="success_message">Registration successful!</p>
+      {% endif %}
+    </div>
     <h2>Please login:</h2>
     <form class="login" action="/login" method="post">
       <ul class="login_ul">
