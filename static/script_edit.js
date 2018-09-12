@@ -99,13 +99,24 @@ window.addEventListener('load', function(){
       event.preventDefault();
       active_element.innerHTML = editable_content.value;
       let json = {
-        user: 1,
-        project: "test",
+        project_id: iframe.attributes['data-project-id'].value,
         selector: getUniqueSelector(active_element),
-        value: editable_content.value,
+        change_value: editable_content.value,
         comment: content_comment.value
       }
-      console.log(json);
+      let myJSON = JSON.stringify(json);
+      // Send data to backend
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", "/savechanges");
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+           // Typical action to be performed when the document is ready:
+           console.log("Saved!");
+        }
+      };
+      xhr.send(myJSON);
+
       pu.style.display = 'none';
       editable_content.innerHTML = "";
     });
@@ -176,5 +187,6 @@ function getUniqueSelector(element){
       uniqueSelector += " > ";
     }
   }
+  console.log(uniqueSelector);
   return uniqueSelector;
 }

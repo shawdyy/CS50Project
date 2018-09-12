@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import os
 import requests
 from classes import User
+import json
 
 DATABASE = 'database.db'
 app = Flask(__name__)
@@ -15,11 +16,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 app.secret_key = os.environ['FLASK_SECRET_KEY']
 
-###
-# logins klappen nun
-# Als nächstes muss ich mich um die Verbindung der changes Seite mit der Datenbank kümmern
-# Außerdem muss die Historie der Änderungen richtig eingeblendet werden.
-# Dann müssen die Projekte auf der Account-Seite richtig gerendert werden
 
 @app.route('/login/<e>', methods=['GET'])
 @app.route('/login', methods=['GET', 'POST'])
@@ -106,6 +102,7 @@ def dashboard():
         newRow[i]['project_id'] = row[i]['project_id']
         newRow[i]['name'] = row[i]['name']
         newRow[i]['url'] = row[i]['url']
+        newRow[i]['last_changed'] = row[i]['last_changed']
         newRow[i]['path'] = 'assets/thumbnails/'+str(row[i]['project_id'])+'.png'
     return render_template('dashboard.html', projects=newRow)
 
@@ -139,14 +136,21 @@ def editProject(id):
         if not str(row['user_id']) == current_user.id:
             return redirect(url_for('dashboard'))
         else:
-            return render_template('edit_project.html', url=row['url'])
+            changes = get_user_via_key('project_id', id, 'changes', True)
+            return render_template('edit_project.html', url=row['url'], project_id=row['project_id'], changes=changes)
 
 @app.route("/savechanges", methods=['POST'])
 @login_required
 def saveChanges():
     if request.method == 'POST':
         data = request.get_json()
-        print(data)
+        with sqlite3.connect(DATABASE) as con:
+            con.row_factory = sqlite3.Row
+            db = con.cursor()
+            db.execute('INSERT INTO changes (project_id, selector, change_value, comment) VALUES (?, ?, ?, ?)', (data['project_id'], data['selector'], data['change_value'], data['comment']))
+            con.commit()
+        return "OK"
+
 
 @app.route("/proxy/<path:url>", methods=['GET'])
 @login_required
